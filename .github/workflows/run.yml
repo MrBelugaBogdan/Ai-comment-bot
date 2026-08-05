@@ -1,0 +1,23 @@
+name: Run AI Commenter
+
+on:
+  workflow_dispatch: # Кнопка для ручного запуску
+  schedule:
+    - cron: '0 */12 * * *' # Авто-запуск кожні 12 годин
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Install dependencies
+        run: pip install PyGithub groq
+      - name: Run Bot
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          BOT_GITHUB_TOKEN: ${{ secrets.BOT_GITHUB_TOKEN }}
+        run: python bot_commenter.py
